@@ -54,7 +54,6 @@ const authors = [
         imageAttribution: 'Pinguino',
         books: [' Harry Potter and the Sorcerers Stone ' ]
     }
-
 ];
 
 function getTurnData(authors) {
@@ -96,49 +95,18 @@ function reducer(
       }
   }
 
-function resetState() {
-    return { 
-        turnData: getTurnData(authors),
-        highlight: ''
-    };
-} 
-
 let store = Redux.createStore(
     reducer,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
-
-let state = resetState();
-
-function onAnswerSelected(answer) {
-    const isCorrect = state.turnData.author.books.some((book) => book === answer);
-    state.highlight = isCorrect ? 'correct' : 'wrong';
-    render();
-}
-
-function App (){
-    return <AuthorQuiz {...state} 
-    onAnswerSelected={onAnswerSelected} 
-    onContinue={() => {
-        state = resetState();
-        render();
-    }}/>;
-}
-
-const AuthorWrapper = withRouter (({ history }) =>
-    <AddAuthorForm onAddAuthor={(author)=> {
-        authors.push(author);
-        history.push('/');
-    }}/>
-);
 
 function render(){
     ReactDOM.render(
     <BrowserRouter>
       <ReactRedux.Provider store={store}>
             <React.Fragment>
-                <Route exact path="/" component={App} />
-                <Route path="/add" component={AuthorWrapper} />
+                <Route exact path="/" component={AuthorQuiz} />
+                <Route path="/add" component={AddAuthorForm} />
             </React.Fragment>
      </ReactRedux.Provider>
     </BrowserRouter>, document.getElementById('root'));

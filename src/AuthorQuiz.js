@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import './App.css';
 import './bootstrap.min.css';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 function Hero() {
   return (<div className="row">
@@ -38,6 +39,7 @@ function Turn({ author, books, highlight, onAnswerSelected}) {
     </div>
   </div>);
 }
+
 Turn.propTypes = {
   author: PropTypes.shape({
     name: PropTypes.string.isRequired,
@@ -72,8 +74,26 @@ function Footer() {
   </div>);
 }
 
+function mapStateToProps(state) {
+  return {
+    turnData: state.turnData,
+    highlight: state.highlight
+  };
+}
 
-function AuthorQuiz ({turnData, highlight, onAnswerSelected, onContinue}) {
+function mapDispatchToProps(dispatch) {
+  return {
+    onAnswerSelected: (answer) => {
+      dispatch({ type: 'ANSWER_SELECTED', answer });
+    },
+    onContinue: () => {
+      dispatch({ type: 'CONTINUE'})
+    }
+  };
+}
+
+const AuthorQuiz = connect(mapStateToProps, mapDispatchToProps) (
+  function ({turnData, highlight, onAnswerSelected, onContinue}) {
   return (
     <div className="container-fluid">
       <Hero />
@@ -84,6 +104,6 @@ function AuthorQuiz ({turnData, highlight, onAnswerSelected, onContinue}) {
     </div>
 
   );
-}
+});
 
 export default AuthorQuiz;
